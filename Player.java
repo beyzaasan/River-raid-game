@@ -15,128 +15,122 @@ import main.*;
 
 
 public class Player extends Entity{
+	
+		public int screenX;
+		public int screenY;
 
-	GamePanel gp;
-	KeyInputs keyI;
-	
-	public int screenX;
-	public int screenY;
-	
-	int hasFuel= 100;//for now
-	
-	public Player (GamePanel gp, KeyInputs keyI) {
-		this.gp=gp;
-		this.keyI=keyI;
+		int hasFuel= 10;//for now
+
 		
-		screenX = gp.screenWidth/2 - (gp.tileSize/2);
-		screenY = 9*gp.screenHeight/10- (gp.tileSize/2);
+		GamePanel gp;
+		KeyInputs keyI;
 		
-		solidArea = new Rectangle();
-		solidArea.x = 5;
-		solidArea.y = 6;
-		solidAreaDefaultX=solidArea.x;
-		solidAreaDefaultY=solidArea.y;
-		solidArea.width = 31;
-		solidArea.height = 36;
-		
-		setDefaultValues();
-		getPlayerImage();
-	}
-	public void setDefaultValues() {
-		worldX = 360; 
-		worldY = 7595;//for now
-		speed = 4;
-	}
-	
-	public void getPlayerImage() {
-		
-		try {
+		public Player (GamePanel gp, KeyInputs keyI) {
+			this.gp=gp;
+			this.keyI=keyI;
 			
-			plane = ImageIO.read(getClass().getResourceAsStream("ucak.png")); 
+			screenX = gp.screenWidth/2 - (gp.tileSize/2);
+			screenY = 9*gp.screenHeight/10- (gp.tileSize/2);
 			
-		}catch(IOException e) {
-			e.printStackTrace();
+			solidArea = new Rectangle();
+			solidArea.x = 5;
+			solidArea.y = 6;
+			solidAreaDefaultX=solidArea.x;
+			solidAreaDefaultY=solidArea.y;
+			solidArea.width = 31;
+			solidArea.height = 36;
+			
+			setDefaultValues();
+			getPlayerImage();
+		}
+		public void setDefaultValues() {
+			worldX = 360; 
+			worldY = 7595;//for now
+			speed = 4;
 		}
 		
-	}
-	
-	public void update() {
+		public void getPlayerImage() {
+			
+			try {
+				
+				plane = ImageIO.read(getClass().getResourceAsStream("ucak.png")); 
+				
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
 		
-		if(keyI.upPressed == true || keyI.downPressed == true || keyI.leftPressed == true ||
-				keyI.rightPressed == true ) {
+		public void update() {
 			
-			if(collisionOn == false) {
-				if(keyI.upPressed == true) {
-				worldY -= speed;
+			if(keyI.upPressed == true || keyI.downPressed == true || keyI.leftPressed == true ||
+					keyI.rightPressed == true ) {
+				
+				if(collisionOn == false) {
+					if(keyI.upPressed == true) {
+					worldY -= speed;
+					}
+					else if(keyI.leftPressed == true) {
+					worldX -= speed;
+					screenX -=speed;
+					}
+					else if(keyI.rightPressed == true) {
+					worldX += speed;
+					screenX +=speed;
+					}
+
 				}
-				else if(keyI.leftPressed == true) {
-				worldX -= speed;
-				screenX -=speed;
+			}
+			// CHECH TILE COLLISION
+			collisionOn = false;
+			gp.cChecker.checkTile(this);
+
+
+			//int objectindex = gp.cChecker.checkObject(this, true);
+			//pickUpObject(objectindex); 
+
+		}
+		public void pickUpObject(int i) {
+
+			if(i != 25) {
+
+				String objectName = gp.obj[i].name;
+				 
+				switch(objectName) {
+				 
+				 case "Fuel":
+					 hasFuel ++;
+					 gp.obj[i]=null;
+					 System.out.println("Fuel left: " + hasFuel); 
+					break;
+				
+				 case "Helicopter":
+					 if (hasFuel>0) {
+					 gp.obj[i]=null;
+					 hasFuel--;
+					 }
+					 break;
+				
+				 case"Ship":
+					 hasFuel=10;
+					 if (hasFuel>0) {
+						 gp.obj[i]=null;
+						 hasFuel--;
+					 }
+					 break;
+
 				}
-				else if(keyI.rightPressed == true) {
-				worldX += speed;
-				screenX +=speed;
-				}
-			
+
 			}
 
+		}
+
+
+
+		public void draw(Graphics2D g2) {
+
+			g2.drawImage(plane, screenX, screenY, gp.tileSize, gp.tileSize, null);
+
 
 		}
-		// CHECH TILE COLLISION
-		collisionOn = false;
-		gp.cChecker.checkTile(this);
-		
-		//int objectindex = gp.cChecker.checkObject(this, false);
-		//pickUpObject(objectindex);
-		
-	}
-		
-	/**/
-		
-	
-	
-	public void pickUpObject(int i) {
-		
-		if(i != 25) {
-			gp.aSetter.setObject();
-			String objectName = gp.obj[i].name;
-			
-				 if(objectName.equals("Fuel")) {
-					 if(gp.player.solidAreaDefaultX == gp.obj[i].solidAreaDefaultX
-							 && gp.player.solidAreaDefaultY == gp.obj[i].solidAreaDefaultY) {
-						 gp.obj[i]=null;
-						 System.out.println("Fuel left: " + hasFuel);
-					 }
-				 }
-				 
-				 if(objectName.equals("Ship")) {
-					 if(gp.obj[i].collision == true && gp.player.solidAreaDefaultX == gp.obj[i].solidAreaDefaultX
-							 && gp.player.solidAreaDefaultY == gp.obj[i].solidAreaDefaultY) {
-						 gp.obj[i]=null;
-						 System.out.println("Fuel left: " + hasFuel);
-					 }
-				 }
-				 
-				 if(gp.obj[i].name.equals("Helicopter")) {
-					 if(gp.obj[i].collision == true && gp.player.solidAreaDefaultX == gp.obj[i].solidAreaDefaultX
-							 && gp.player.solidAreaDefaultY == gp.obj[i].solidAreaDefaultY) {
-						 		
-						 gp.obj[i]=null;
-						 System.out.println("Fuel left: " + hasFuel);
-					 }
-				 }
-	
-		}
-				 
-	}
-	
-	
-	
-	public void draw(Graphics2D g2) {
-		
-		g2.drawImage(plane, screenX, screenY, gp.tileSize, gp.tileSize, null);
-		
-		
-	}
-	 
 }
