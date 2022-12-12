@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable{
 	Thread gameThread;
 	
 	public Player player =new Player(this, keyI); 
-	public SuperObject[] obj = new SuperObject[100];
+	public SuperObject[] obj = new SuperObject[25];
 	
 	
 	public GamePanel() {
@@ -50,7 +50,6 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	public void setupGame() {
 		aSetter.setObject();//to add other setup stuff in future
-		playMusic(0);//tema müziği
 	}
 	
 	
