@@ -10,6 +10,9 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyInputs;
+import object.OBJ_Fuel;
+import main.*;
+
 
 public class Player extends Entity{
 
@@ -19,7 +22,7 @@ public class Player extends Entity{
 	public int screenX;
 	public int screenY;
 	
-	int hasFuel= 10;//for now
+	int hasFuel= 100;//for now
 	
 	public Player (GamePanel gp, KeyInputs keyI) {
 		this.gp=gp;
@@ -76,56 +79,64 @@ public class Player extends Entity{
 				}
 			
 			}
+
+
 		}
 		// CHECH TILE COLLISION
 		collisionOn = false;
 		gp.cChecker.checkTile(this);
 		
-		
-		//int objectindex = gp.cChecker.checkObject(this, true);
-		//pickUpObject(objectindex); 
+		//int objectindex = gp.cChecker.checkObject(this, false);
+		//pickUpObject(objectindex);
 		
 	}
+		
+	/**/
+		
+	
+	
 	public void pickUpObject(int i) {
 		
-		if(i != 999) {
-			
+		if(i != 25) {
+			gp.aSetter.setObject();
 			String objectName = gp.obj[i].name;
-			 switch(objectName) {
-			 case "Fuel":
-				 hasFuel ++;
-				 gp.obj[i]=null;
-				 System.out.println("Fuel left: " + hasFuel); 
-				break;
-			 case "Helicopter":
-				 if (hasFuel>0) {
-				 gp.obj[i]=null;
-				 hasFuel--;
-				 
-				 }
-				 break;
-			 case"Ship":
-				 hasFuel=10;
-				 if (hasFuel>0) {
-					 gp.obj[i]=null;
-					 hasFuel--;
-					 }
 			
-		
-	}
+				 if(objectName.equals("Fuel")) {
+					 if(gp.player.solidAreaDefaultX == gp.obj[i].solidAreaDefaultX
+							 && gp.player.solidAreaDefaultY == gp.obj[i].solidAreaDefaultY) {
+						 gp.obj[i]=null;
+						 System.out.println("Fuel left: " + hasFuel);
+					 }
+				 }
+				 
+				 if(objectName.equals("Ship")) {
+					 if(gp.obj[i].collision == true && gp.player.solidAreaDefaultX == gp.obj[i].solidAreaDefaultX
+							 && gp.player.solidAreaDefaultY == gp.obj[i].solidAreaDefaultY) {
+						 gp.obj[i]=null;
+						 System.out.println("Fuel left: " + hasFuel);
+					 }
+				 }
+				 
+				 if(gp.obj[i].name.equals("Helicopter")) {
+					 if(gp.obj[i].collision == true && gp.player.solidAreaDefaultX == gp.obj[i].solidAreaDefaultX
+							 && gp.player.solidAreaDefaultY == gp.obj[i].solidAreaDefaultY) {
+						 		
+						 gp.obj[i]=null;
+						 System.out.println("Fuel left: " + hasFuel);
+					 }
+				 }
 	
 		}
 				 
-			 }
+	}
 	
 	
 	
 	public void draw(Graphics2D g2) {
 		
-		BufferedImage image = null;
-	
 		g2.drawImage(plane, screenX, screenY, gp.tileSize, gp.tileSize, null);
 		
 		
 	}
+	 
 }
