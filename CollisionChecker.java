@@ -37,7 +37,7 @@ public class CollisionChecker {
 	}
 	public int checkObject (Entity entity, boolean player) {
 		
-		int index = 999;
+		int index = 25;
 		
 		for(int i =0; i< gp.obj.length ; i++) {
 			
