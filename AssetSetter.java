@@ -118,5 +118,8 @@ public class AssetSetter {
 		gp.obj[24].worldX = 450;
 		gp.obj[24].worldY = 7300;*/
 		
+		for(int i = 0;i<gp.obj.length; i++)
+			gp.obj[i].collision = true;
+		
 	}
 }
